@@ -1,0 +1,17 @@
+# Environment / secrets
+.env
+.env.txt
+venv/
+env/
+.venv*/
+frontend/node_modules/
+frontend/dist/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS/editor junk
+.DS_Store
+.vscode/
