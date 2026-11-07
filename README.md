@@ -84,3 +84,22 @@ Never commit `.env` or a real API key. Configure `GROQ_API_KEY` in the
 deployment platform's secret settings. The backend keeps paper search sessions
 in process memory, so use a single backend worker unless session storage is
 moved to a shared store.
+
+### Deploy to Render
+
+1. Push the project to GitHub, including the `Dockerfile` and `.dockerignore`.
+   Do not commit `.env`.
+2. In Render, create a **Web Service** and connect this repository. Render
+   detects the Dockerfile automatically; leave the root directory as `.`.
+3. Add `GROQ_API_KEY` under the service's **Environment** settings. Never put
+   the key in the Dockerfile or frontend.
+4. Create the service. The Docker build installs the backend dependencies and
+   builds the frontend; Render supplies the port at runtime.
+5. After deployment, open the service URL and check `/api/status`. It should
+   return `{"groq_configured":true}`. Try an arXiv search, then test review
+   generation and Q&A.
+
+The service uses one worker because search sessions are stored in process
+memory. The first search downloads the embedding model, so initial startup or
+search may take a few minutes. Check Render's logs if the service fails to
+build or start.
