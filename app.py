@@ -11,7 +11,6 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from src.embed import embed_chunks, get_model
 from src.fetch_arxiv import search_arxiv
 from src.generate import generate_literature_review, generate_qa_answer
 from src.vectorstore import build_index, search_index
@@ -97,8 +96,9 @@ def search_papers(request: SearchRequest):
         if not papers:
             return {"session_id": None, "papers": [], "year_counts": {}}
 
-        texts = [f"{paper['title']}. {paper['summary']}" for paper in papers]
-        index = build_index(embed_chunks(texts))
+        index = build_index(
+            [f"{paper['title']}. {paper['summary']}" for paper in papers]
+        )
 
         now = time.monotonic()
         expired_sessions = [
@@ -170,12 +170,8 @@ def ask_question(request: QuestionRequest):
 
     session = get_paper_session(request.session_id)
     try:
-        model = get_model()
-        query_embedding = model.encode(question, convert_to_numpy=True)
         top_indices, _ = search_index(
-            session.index,
-            query_embedding,
-            k=min(5, len(session.papers)),
+            session.index, question, k=min(5, len(session.papers))
         )
         relevant_papers = [session.papers[index] for index in top_indices]
         answer = generate_qa_answer(question, relevant_papers)

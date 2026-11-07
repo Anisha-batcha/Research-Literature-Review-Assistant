@@ -3,7 +3,7 @@
 Search arXiv for a research topic, review the resulting papers, generate a
 citation-supported literature review, and ask questions grounded in the paper
 abstracts. The app combines a React/Vite frontend with a FastAPI backend,
-Sentence Transformers, FAISS, and the Groq API.
+lightweight keyword retrieval, and the Groq API.
 
 ## Features
 
@@ -11,7 +11,7 @@ Sentence Transformers, FAISS, and the Groq API.
 - Select which papers to include in a generated review.
 - Click review citations to open their arXiv records.
 - Export the review and linked bibliography as Markdown.
-- Ask questions and see the retrieved source papers.
+- Ask questions and see source papers matched by keywords in their abstracts.
 
 The app uses arXiv metadata and abstracts, not full-text paper contents.
 Generated reviews and answers require a Groq API key.
